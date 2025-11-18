@@ -21,7 +21,7 @@ class ClassifyAPI(APIView):
         if not model or not vectorizer:
             return Response({"error": "모델이 준비되지 않았습니다."}, status=500)
         
-        # 백엔드 1과 약속된 로직 수행 예시
+        # 로직 수행 예시
         try:
             text_vector = vectorizer.transform([input_text]) # 입력 텍스트를 번역 (TF_IDF)
             prediction = model.predict(text_vector) # 예: [0] (안전) or [1] (위험) -> 모델이 예측한 결과?
