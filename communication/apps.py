@@ -1,35 +1,35 @@
-# 앱 처음 실행 시 모델을 한 번만 로드
-# 모델을 로드할 코드를 ready() 함수 안에 작성합니다.
-
+# communication/apps.py
 from django.apps import AppConfig
-import joblib   # pkl 파일 관련
-import os
-
-# 테스트 모델
-from .ml_models import PhishingModelMock, TfidfVectorizerMock
 
 class CommunicationConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'communication'
 
-    # 로드된 모델을 담을 변수
-    phishing_model = None
-    tfidf_vectorizer = None # (TF-IDF도 같이 로드해야 함)
+    # 모델 로드 상태 플래그
+    model_loaded = False
 
-    def ready(self): # 이 함수는 서버가 켜질 때 한 번만 실행됩니다.
-        print("피싱 감지 모델을 로드합니다...")
-
-        #백엔드 1이 전달한 모델 파일의 경로
-        model_path = "communication/ml_models/phishing_model.pkl"
-        vectorizer_path = "communication/ml_models/tfidf_vectorizer.pkl"
-
-        # 모델 파일의 경로로부터 모델을 로드해 클래스 변수에 저장 
-        try:
-            # 1. TF-IDF 벡터라이저 로드
-            CommunicationConfig.tfidf_vectorizer = joblib.load(vectorizer_path) 
-            # 2. 피싱 감지 모델 로드
-            CommunicationConfig.phishing_model = joblib.load(model_path)
-            print("모델 로드 완료.")
-        except FileNotFoundError:
-            print("⚠️ [백엔드 2] 모델 파일을 찾을 수 없습니다. (테스트 모드)")
+    def ready(self):
+        """서버 시작 시 한 번만 실행"""
+        # Django의 ready()는 여러 번 호출될 수 있으므로 중복 방지
+        if not CommunicationConfig.model_loaded:
+            print("\n" + "="*60)
+            print("🚀 피싱 탐지 모델 초기화 시작")
+            print("="*60)
+            
+            try:
+                from .ml_loader import load_models
+                success = load_models(model_dir="communication/ml_models")
+                
+                if success:
+                    CommunicationConfig.model_loaded = True
+                    print("="*60)
+                    print("✅ 피싱 탐지 시스템 준비 완료!")
+                    print("="*60 + "\n")
+                else:
+                    print("⚠️ 모델 로드에 실패했습니다. 테스트 모드로 실행됩니다.")
+                    
+            except Exception as e:
+                print(f"❌ 모델 초기화 중 오류: {e}")
+                print("⚠️ 서버는 계속 실행되지만 AI 기능이 작동하지 않을 수 있습니다.")
+        
         return super().ready()
