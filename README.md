@@ -1,6 +1,6 @@
 # Phishing Guard Server
 
-## 🚧 개발 진행 상황
+## 개발 진행 상황
 
 ### ✅ 완료
 - Django 프로젝트 초기 설정
