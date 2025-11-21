@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+
+# Django
+*.log
+db.sqlite3
+media/
+
+# ML Models (용량 큰 파일)
+communication/ml_models/*.pt
+communication/ml_models/*.pth
+communication/ml_models/*.h5
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 환경변수
+.envcommunication/ml_models/

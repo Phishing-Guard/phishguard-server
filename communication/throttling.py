@@ -1,4 +1,3 @@
-# communication/throttling.py
 """
 Rate Limiting (속도 제한) 설정
 과도한 요청으로부터 서버를 보호
