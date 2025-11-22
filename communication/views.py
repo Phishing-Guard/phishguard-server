@@ -24,9 +24,14 @@ def get_simple_type(level):
     else:
         return "주의"
 
-def get_danger_list(level, text):
+def get_danger_list(level, text, sbert_similarity=None): # ✅ 파라미터 추가 
     """위험 요소 리스트 생성"""
     dangers = []
+
+    # SBERT 결과 추가
+    if sbert_similarity is not None and sbert_similarity >= 0.8:
+        dangers.append(f"과거 피싱 패턴과 {sbert_similarity*100:.0f}% 유사")
+    
 
     # 가족 사칭
     if "가족 사칭" in level:
@@ -135,16 +140,22 @@ class ClassifyAPI(APIView):
         
         # 3. 피싱 탐지 수행
         try:
-            from .ml_loader import analyze_intent
+            from .ml_loader import analyze_intent, sbert_max_similarity_fn
             
-            # 핵심 분석 함수 호출
+            # SBERT 유사도 먼저 계산 
+            sbert_similarity = sbert_max_similarity_fn(input_text)
+
+            # 분석 함수 호출
             result = analyze_intent(input_text)
 
             # 응답 데이터 구성 (프론트 형식에 맞춰 변경하였습니다.)
             response_data = {
                 "type": get_simple_type(result["type"]),      # "안전", "주의", "피싱"
                 "message": result["message"],                 # AI 생성 메시지
-                "danger": get_danger_list(result["type"], input_text),  # 위험 요소 리스트
+                "danger": get_danger_list(      # 위험 요소 리스트에 SBERT 유사도 전달
+                    result["type"], 
+                    input_text,
+                    sbert_similarity),  
                 "solve": get_solve_list(result["type"]),      # 해결 방법 리스트
                 "percent": round(result["probability"] * 100, 2),  # 확신도
                 "is_dangerous": result["label"] == 1          # 위험 여부
@@ -173,7 +184,6 @@ class ClassifyAPI(APIView):
         except Exception as e:
             # 에러 로깅 (실제 운영에서는 로그 파일에 기록)
             logger.error(f"[CLASSIFY] 모델 추론 오류: {e}", exc_info=True)
-            
             return Response(
                 {"error": "서버 내부 오류가 발생했습니다."}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
