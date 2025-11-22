@@ -1,4 +1,3 @@
-# communication/apps.py
 from django.apps import AppConfig
 
 class CommunicationConfig(AppConfig):
@@ -18,6 +17,7 @@ class CommunicationConfig(AppConfig):
             
             try:
                 from .ml_loader import load_models
+                # 모델 로드 
                 success = load_models(model_dir="communication/ml_models")
                 
                 if success:
@@ -26,10 +26,11 @@ class CommunicationConfig(AppConfig):
                     print("✅ 피싱 탐지 시스템 준비 완료!")
                     print("="*60 + "\n")
                 else:
-                    print("⚠️ 모델 로드에 실패했습니다. 테스트 모드로 실행됩니다.")
+                    print("⚠️ 모델 로드에 실패했습니다.")
+                    print("⚠️ API 호출 시 503 에러가 반환됩니다.")
                     
             except Exception as e:
                 print(f"❌ 모델 초기화 중 오류: {e}")
-                print("⚠️ 서버는 계속 실행되지만 AI 기능이 작동하지 않을 수 있습니다.")
+                print("⚠️ 서버는 실행되지만 AI 기능이 작동하지 않습니다.")
         
         return super().ready()
