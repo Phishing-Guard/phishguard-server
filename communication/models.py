@@ -1,7 +1,5 @@
 from django.db import models
 
-
-
 class CommunicationLog(models.Model):
     """피싱 감지 API 로그 저장 모델"""
     input_text = models.TextField(

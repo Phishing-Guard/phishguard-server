@@ -13,8 +13,20 @@ SECRET_KEY = 'django-insecure-e*mp*inqwr!y&w0#1y8_xe=t7v-p^%df@6efw9utb0h3%!a6pu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.ngrok-free.app',
+    '.ngrok.io',
+    '.free.dev'
+]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ngrok-free.app',
+    'https://*.ngrok.io',
+    'https://*.free.dev',
+    'http://localhost:3000',
+]
 
 # Application definition
 
@@ -31,7 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [  # CORS/CSRF 설정 (보안)
-    'corsheaders.middleware.CorsMiddleware', # 맨 윗 줄에 추가해야 하는 부분 
+    'corsheaders.middleware.CorsMiddleware', 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
