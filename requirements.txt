@@ -1,0 +1,16 @@
+# Django 기본
+Django>=5.2.0
+djangorestframework>=3.14.0
+
+# AI 모델
+torch>=2.0.0
+transformers>=4.30.0
+sentence-transformers>=2.2.0
+
+# 필수 유틸리티
+gdown>=4.7.0
+sentencepiece>=0.1.99
+protobuf>=3.20.0
+
+# CORS
+django-cors-headers>=4.0.0
