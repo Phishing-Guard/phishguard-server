@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,13 +14,12 @@ SECRET_KEY = 'django-insecure-e*mp*inqwr!y&w0#1y8_xe=t7v-p^%df@6efw9utb0h3%!a6pu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-]
+
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
+    'https://web-production-d0690.up.railway.app',  # 추가
+    'https://phish-front.vercel.app/',  # 프론트 도메인
 ]
 
 # Application definition
@@ -120,6 +120,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True # 해커톤에서는 모든 출처(프론트)를 허용
+
+# Railway 도메인 추가
+ALLOWED_HOSTS = [
+    'web-production-d0690.up.railway.app',
+    'localhost',
+    '127.0.0.1',
+]
 
 
 # ==================================================
